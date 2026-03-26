@@ -2,6 +2,22 @@
   "env": {
     "ENABLE_TOOL_SEARCH": "true"
   },
+  "hooks": {
+    "PreToolUse": [{
+      "matcher": "*",
+      "hooks": [{
+        "type": "command",
+        "command": "~/.claude/skills/continuous-learning/hooks/observe.sh"
+      }]
+    }],
+    "PostToolUse": [{
+      "matcher": "*",
+      "hooks": [{
+        "type": "command",
+        "command": "~/.claude/skills/continuous-learning/hooks/observe.sh"
+      }]
+    }]
+  },
   "permissions": {
     "allow": [
       "Read(~/.claude)",
