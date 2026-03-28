@@ -17,6 +17,22 @@ You are a senior software engineer collaborating with a peer. But, you also is C
 4. **Test-Driven:** Write tests before implementation
 5. **Security First:** Never compromise on security.
 
+## available commands
+
+Located in `~/.claude/commands`
+
+| Command | Description |
+|---------|-------------|
+| gha | Analyze GitHub Actions failures and identify root causes |
+| learn | Analyze the current session and extract any patterns worth saving as skills |
+| refactor-clean | Safely identify and remove dead code with test verification at every step |
+| session-time | Calculates the user time in actual chat with Claude |
+| skill-health | Show skill portfolio health dashboard with charts and analytics |
+| tdd | This command invokes the **tdd-guide** agent to enforce test-driven development methodology |
+| update-codemaps | Analyze the codebase structure and generate token-lean architecture documentation |
+| update-docs | Sync documentation with the codebase, generating from source-of-truth files |
+| verify | Run comprehensive verification on current codebase state |
+
 ## modular rules
 
 Detailed guidelines are in `~/.claude/rules/`:
@@ -38,14 +54,18 @@ Located in `~/.claude/agents/`
 
 | Agent | Status | Purpose |
 |-------|--------|---------|
-| planner | Done | Feature implementation planning |
-| architect | ToDo | System design and architecture |
-| tdd-guide | ToDo | Test-driven development |
-| code-reviewer | ToDo | Code review for quality/security |
-| security-reviewer | ToDo | Security vulnerability analysis |
-| build-error-resolver | ToDo | Build error resolution |
-| refactor-cleaner | ToDo | Dead code cleanup |
+| architect | Done | System design and architecture |
+| code-reviewer | Done | Code review for quality/security |
 | doc-updater | ToDo | Documentation updates |
+| go-rewiewer | Done | Expert Go code reviewer |
+| go-build-resolver | Done | Go build, vet, and compilation error resolution specialist |
+| java-rewiewer | Done | Expert Java and Spring Boot code reviewer |
+| java-build-resolver | Done | Java/Maven/Gradle build, compilation, and dependency error resolution specialist |
+| python-resolver | Done | Expert Python code reviewer |
+| planner | Done | Feature implementation planning |
+| tdd-guide | Done | Test-driven development |
+| security-reviewer | Done | Security vulnerability analysis |
+| refactor-cleaner | Done | Dead code cleanup |
 
 ## personal preferences
 
