@@ -1,0 +1,71 @@
+{
+  "env": {
+    "ENABLE_TOOL_SEARCH": "true"
+  },
+  "hooks": {
+    "PreToolUse": [{
+      "matcher": "*",
+      "hooks": [{
+        "type": "command",
+        "command": "~/.claude/skills/continuous-learning/hooks/observe.sh"
+      }]
+    }],
+    "PostToolUse": [{
+      "matcher": "*",
+      "hooks": [{
+        "type": "command",
+        "command": "~/.claude/skills/continuous-learning/hooks/observe.sh"
+      }]
+    }]
+  },
+  "permissions": {
+    "allow": [
+      "Read(~/.claude)",
+      "Bash(find:*)",
+      "Bash(head:*)",
+      "Bash(grep:*)",
+      "Bash(mvn:*)",
+      "Bash(mvn validate:*)",
+      "Bash(mvn dependency:tree:*)",
+      "Bash(mvn help:evaluate:*)",
+      "Bash(mvn help:active-profiles:*)",
+      "Bash(mvn help:describe:*)",
+      "Bash(mvn clean compile:*)",
+      "Bash(mvn package:*)",
+      "Bash(mvn compile:*)",
+      "Bash(./mvnw clean compile:*)",
+      "Bash(./mvnw test:*)",
+      "Bash(cat:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)",
+      "Bash(git tag:*)",
+      "Bash(git status:*)",
+      "Bash(git fetch:*)",
+      "Bash(tee:*)",
+      "Bash(tree:*)",
+      "WebSearch",
+      "Bash(curl:*)",
+      "Bash(ls:*)",
+      "Bash(awk:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh api:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)",
+      "Bash(wc:*)",
+      "Bash(aws:*)",
+      "Bash(jar tf:*)",
+      "Bash(javap:*)"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/scripts/context-bar.sh"
+  },
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true
+  },
+  "alwaysThinkingEnabled": true
+}
