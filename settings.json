@@ -7,14 +7,14 @@
       "matcher": "*",
       "hooks": [{
         "type": "command",
-        "command": "~/.claude/skills/continuous-learning/hooks/observe.sh"
+        "command": "$HOME/.claude/skills/continuous-learning/hooks/observer.sh"
       }]
     }],
     "PostToolUse": [{
       "matcher": "*",
       "hooks": [{
         "type": "command",
-        "command": "~/.claude/skills/continuous-learning/hooks/observe.sh"
+        "command": "$HOME/.claude/skills/continuous-learning/hooks/observer.sh"
       }]
     }]
   },
@@ -66,6 +66,17 @@
   },
   "enabledPlugins": {
     "gopls-lsp@claude-plugins-official": true
+  },
+  "mcpServers": {
+    "atlassian": {
+      "command": "uvx",
+      "args": ["mcp-atlassian"],
+      "env": {
+        "JIRA_URL": "${JIRA_URL}",
+        "JIRA_USERNAME": "${JIRA_USERNAME}",
+        "JIRA_API_TOKEN": "${JIRA_API_TOKEN}"
+      }
+    }
   },
   "alwaysThinkingEnabled": true
 }
