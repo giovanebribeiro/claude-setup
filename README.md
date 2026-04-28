@@ -7,3 +7,18 @@ My configurations, scripts, skills, etc., for Claude Code. Got many things (incl
 * serena ([https://oraios.github.io/serena/02-usage/030_clients.html](https://oraios.github.io/serena/02-usage/030_clients.html))
 * rtk ([https://github.com/rtk-ai/rtk](https://github.com/rtk-ai/rtk))
 * caveman ([https://github.com/JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman))
+
+### Installation
+
+Just clone this repo as:
+
+```
+# in a fresh install, before the claude installation:
+$ git clone https://github.com/GiovaneRibeiro-neuro/claude-setup.git ~/.claude
+
+# or, in an existent claude install:
+
+$ cp -r ~/.claude ~/.claude.bkp
+$ git clone https://github.com/GiovaneRibeiro-neuro/claude-setup.git ~/.claude
+$ cp -r ~/.claude.bkp/**/*.* ~/.claude/
+```
