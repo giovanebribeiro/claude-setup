@@ -1,0 +1,8 @@
+.credentials.json
+.last-cleanup
+backups/
+cache/
+history.jsonl
+mcp-needs-auth-cache.json
+plugins/
+projects/
