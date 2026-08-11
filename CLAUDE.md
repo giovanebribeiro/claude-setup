@@ -43,7 +43,7 @@ Detailed guidelines are in `~/.claude/rules/`:
 | coding-style.md | Done | Immutability, file organization, error handling |
 | testing.md | ToDo | TDD workflow, 80% coverage requirement |
 | git-workflow.md | ToDo | Commit format, PR workflow |
-| agents.md | ToDo | Agent orchestration, when to use which agent |
+| agents.md | Done | Agent orchestration, when to use which agent |
 | patterns.md | ToDo | API response, repository patterns |
 | performance.md | ToDo | Model selection, context management |
 | hooks.md | ToDo | Hooks System |
@@ -54,14 +54,17 @@ Located in `~/.claude/agents/`
 
 | Agent | Status | Purpose |
 |-------|--------|---------|
+| manager | Done | Top-level orchestrator, decomposes requests and dispatches to specialists |
 | architect | Done | System design and architecture |
 | code-reviewer | Done | Code review for quality/security |
 | doc-updater | ToDo | Documentation updates |
-| go-rewiewer | Done | Expert Go code reviewer |
+| go-reviewer | Done | Expert Go code reviewer |
 | go-build-resolver | Done | Go build, vet, and compilation error resolution specialist |
-| java-rewiewer | Done | Expert Java and Spring Boot code reviewer |
+| java-reviewer | Done | Expert Java and Spring Boot code reviewer |
 | java-build-resolver | Done | Java/Maven/Gradle build, compilation, and dependency error resolution specialist |
 | python-resolver | Done | Expert Python code reviewer |
+| rust-reviewer | Done | Expert Rust code reviewer |
+| rust-build-resolver | Done | Rust build, borrow-checker, and clippy error resolution specialist |
 | planner | Done | Feature implementation planning |
 | tdd-guide | Done | Test-driven development |
 | security-reviewer | Done | Security vulnerability analysis |
