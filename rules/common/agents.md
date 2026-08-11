@@ -58,6 +58,7 @@ If `manager` is invoked without an architect design already in the prompt, it wi
 
 1. `architect` always runs first — mandatory plan composition/validation step, never skipped.
 2. Build-resolvers (`go-build-resolver`, `java-build-resolver`, `rust-build-resolver`) run before reviewers touching the same code.
-3. Reviewers (`code-reviewer`, `security-reviewer`, `go-reviewer`, `java-reviewer`, `python-resolver`, `rust-reviewer`) run in parallel when they don't touch the same files.
-4. `tdd-guide` runs before implementation-heavy steps when TDD is requested.
-5. `doc-updater` always runs last — mandatory documentation step, included even if the user's request never mentioned documentation.
+3. Reviewers (`code-reviewer`, `go-reviewer`, `java-reviewer`, `python-resolver`, `rust-reviewer`) run in parallel when they don't touch the same files.
+4. `security-reviewer` is conditional, not unconditional like `doc-updater` — but the condition is a floor, not a suggestion: **any** step touching auth, secrets/credentials, user input parsing, deserialization, or API endpoints MUST get a `security-reviewer` pass, in parallel with the language reviewer covering the same files, regardless of whether the user asked for a security review. Manager must scan each step's description against this list before finalizing the plan, not just wait for the user to mention security.
+5. `tdd-guide` runs before implementation-heavy steps when TDD is requested.
+6. `doc-updater` always runs last — mandatory documentation step, included even if the user's request never mentioned documentation.
