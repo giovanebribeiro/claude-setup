@@ -11,11 +11,13 @@ projects/
 .serena/
 RTK.md
 agent-data/
+!agent-data/tracker/config.md.template
+!agent-data/tracker/vocabulary.md.template
 daemon/
 debug/
 file-history/
 homunculus/
-hooks/
+/hooks/
 jobs/
 paste-cache/
 plans/
@@ -23,6 +25,9 @@ sessions/
 settings.local.json
 settings.json.bak
 shell-snapshots/
-skills/
 stats-cache.json
 tasks/
+
+# company-specific skill content (learned from a specific employer's Jira instance)
+skills/learned/jira-epic-arc-pattern.md
+skills/github-actions-to-gitlab-ci/

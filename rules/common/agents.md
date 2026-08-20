@@ -19,6 +19,7 @@
 | tdd-guide | Enforce write-tests-first methodology, 80%+ coverage. |
 | refactor-cleaner | Remove dead code/duplicates via knip/depcheck/ts-prune. |
 | doc-updater | Update docs/codemaps. Mandatory last step in any `manager` plan. |
+| tracker-integrator | Create tracker (Jira) epics/tasks from an already-approved plan; posts card keys/links and stops for user confirmation. Opt-in — dispatch only on explicit user request, never a default `manager` step. |
 
 ## Agent vs skill
 
@@ -62,3 +63,12 @@ If `manager` is invoked without an architect design already in the prompt, it wi
 4. `security-reviewer` is conditional, not unconditional like `doc-updater` — but the condition is a floor, not a suggestion: **any** step touching auth, secrets/credentials, user input parsing, deserialization, or API endpoints MUST get a `security-reviewer` pass, in parallel with the language reviewer covering the same files, regardless of whether the user asked for a security review. Manager must scan each step's description against this list before finalizing the plan, not just wait for the user to mention security.
 5. `tdd-guide` runs before implementation-heavy steps when TDD is requested.
 6. `doc-updater` always runs last — mandatory documentation step, included even if the user's request never mentioned documentation.
+7. `tracker-integrator` is opt-in — not a floor like `security-reviewer`, not unconditional
+   like `doc-updater`. Include it in the dispatch table ONLY when the user's request
+   explicitly signals they want this work tracked (e.g. "create a Jira card for this",
+   "track this epic") — absence of such a request means absence from the plan, there is no
+   keyword-scan floor to apply by default. When included: it runs after `architect`
+   validates the plan (cards are created *from* the approved plan, so the plan must exist
+   first), and its step never gates subsequent implementation steps in the dispatch table —
+   the user's separate, explicit "go" in conversation is what unblocks implementation, not
+   `manager`'s table completing.

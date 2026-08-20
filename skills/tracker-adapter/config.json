@@ -1,0 +1,5 @@
+{
+  "version": "1.0",
+  "active_adapter": "jira",
+  "issue_key_regex": "[A-Z][A-Z0-9]+-[0-9]+"
+}
