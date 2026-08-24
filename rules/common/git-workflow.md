@@ -17,7 +17,7 @@ When a commit implements work created via `tracker-integrator` / `/track-work`, 
 tracker issue key in the scope:
 
 ```
-feat(PROP-123): add retry to card sync
+feat(TEAM-123): add retry to card sync
 ```
 
 - **Opt-in, not mandatory** for every commit — only for work that actually went through
@@ -37,8 +37,8 @@ feat(PROP-123): add retry to card sync
 
 Commit with a tracker key — the hook prints:
 ```
-$ git commit -m "feat(PROP-123): add retry to card sync"
-[tracker] Commit references PROP-123 — remember to move that card.
+$ git commit -m "feat(TEAM-123): add retry to card sync"
+[tracker] Commit references TEAM-123 — remember to move that card.
 ```
 
 Commit without a tracker key — the hook prints a lighter reminder, doesn't block:

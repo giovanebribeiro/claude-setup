@@ -2,7 +2,7 @@
 name: tracker-adapter
 description: Generic issue-tracker adapter contract (resolve project, create epic, create task, link parent-child, add comment) plus the approval-gate procedure — post created card keys/links and stop, never auto-continue into implementation. Currently backed by exactly one concrete adapter, Jira via the Atlassian MCP (see adapters/jira.md). Use when creating tracker cards for an approved plan.
 agents: ["tracker-integrator"]
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Tracker Adapter
@@ -32,10 +32,12 @@ the concrete call sequence behind every operation below. Right now that's always
 ## Never hardcode project/board
 
 Always resolve the project/board key via `resolve_project`, or ask the user, rather than
-assuming or defaulting one. Genericizing per-org values (custom field IDs, cloudId, board
-filters) into this contract would be speculative complexity for a hypothetical
-multi-tenant case that isn't needed — those live in
-`~/.claude/agent-data/tracker/config.md` instead, read by the adapter at runtime.
+assuming or defaulting one. Per-org values (custom field IDs, cloudId, board filters)
+stay out of this contract on purpose — they live in `<client_root>/TRACKER.md`, where
+`<client_root>` is resolved per-invocation by the `client-context` skill (multiple
+clients are a real case now, not a hypothetical one — see `~/workspace/<client>/` for
+each client's files). The adapter reads `TRACKER.md` at runtime; this contract never
+sees the values directly.
 
 ## Approval gate
 
@@ -46,13 +48,13 @@ for free; don't re-derive or relax it per adapter.
 
 ## Example
 
-Abstract call sequence for "create an epic with two linked tasks under project PROP":
+Abstract call sequence for "create an epic with two linked tasks under project TEAM":
 
 ```
-resolve_project("PROP")              -> "PROP"
-create_epic("PROP", {...})           -> "PROP-456"
-create_task("PROP", parent="PROP-456", {...})  -> "PROP-457"
-create_task("PROP", parent="PROP-456", {...})  -> "PROP-458"
+resolve_project("TEAM")              -> "TEAM"
+create_epic("TEAM", {...})           -> "TEAM-456"
+create_task("TEAM", parent="TEAM-456", {...})  -> "TEAM-457"
+create_task("TEAM", parent="TEAM-456", {...})  -> "TEAM-458"
 ```
 
 See `adapters/jira.md`'s own Example section for the same sequence expressed as real

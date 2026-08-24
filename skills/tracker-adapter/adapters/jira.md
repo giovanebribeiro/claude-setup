@@ -3,22 +3,24 @@
 Concrete implementation of the `tracker-adapter` operation contract for Jira, via the
 Atlassian MCP (`mcp__atlassian__*`). Ported from a working Trillia-specific version — the
 *shape* of every step below is proven; the *values* (cloudId, custom field IDs, project
-keys, description template) are org-specific and must come from
-`~/.claude/agent-data/tracker/config.md`, never hardcoded here.
+keys, description template) are per-client and must come from `<client_root>/TRACKER.md`
+(resolved per step 0 below), never hardcoded here.
 
 Do not guess on missing critical info — ask the user. Do not silently invent values for
 required fields.
 
-## 0. Resolve cloudId
+## 0. Resolve the client, then cloudId
 
-Read `cloud_id` from `agent-data/tracker/config.md`. Try it directly. If any call fails
-with an auth/resource error, call `getAccessibleAtlassianResources` to re-resolve, and
-update `config.md` with the corrected value.
+Invoke the `client-context` skill's `resolve_client_root()` to find `<client_root>`
+(walk-up from cwd, or ask if that fails — see that skill for the algorithm). Read
+`cloud_id` from `<client_root>/TRACKER.md`. Try it directly. If any call fails with an
+auth/resource error, call `getAccessibleAtlassianResources` to re-resolve, and update
+`TRACKER.md` with the corrected value.
 
 ## 1. `resolve_project(hint?)`
 
 If a hint (project key) was given, use it directly. Otherwise call
-`getVisibleJiraProjects` and ask the user to pick, or check `agent-data/tracker/config.md`'s
+`getVisibleJiraProjects` and ask the user to pick, or check `<client_root>/TRACKER.md`'s
 project table for a default. Never hardcode a key.
 
 ## 2. Gather inputs for `create_epic` / `create_task` — ask if missing
@@ -28,9 +30,9 @@ Before creating anything, make sure you have:
 - **Project key** — from `resolve_project`.
 - **Summary** — short, action-oriented title.
 - **Issue type** (Task, Story, Bug, Epic...). Default to the org's task-equivalent if the
-  user just says "card" without specifying — check `config.md` for the default.
+  user just says "card" without specifying — check `TRACKER.md` for the default.
 - **Parent epic**, if this is a task belonging under one.
-- **Due date**, if `config.md` marks it as an org convention (some orgs require it on
+- **Due date**, if `TRACKER.md` marks it as an org convention (some orgs require it on
   every issue even though Jira itself doesn't) — check before assuming it's optional.
 - **Description content**: enough to fill the org's description template (see step 5).
   If the user hasn't given success criteria or risks, ask for them explicitly rather than
@@ -54,10 +56,10 @@ untranslatedName value.
 Call `getJiraIssueTypeMetaWithFields(projectKey, issueTypeId)`. Walk the `fields` array:
 
 - Any field with `"required": true` that isn't summary/project/issuetype/reporter MUST be
-  set before creating, or the call fails. Check `agent-data/tracker/config.md`'s
+  set before creating, or the call fails. Check `<client_root>/TRACKER.md`'s
   custom-field table for known field IDs/names for this project; if a required field isn't
   in that table yet, resolve it here and consider asking the user whether to record it in
-  `config.md` for next time.
+  `TRACKER.md` for next time.
 - Match the user's intent against a field's `allowedValues` by `value` — if it doesn't
   clearly match one, list the options and ask.
 - Look for an **Epic Link**-style field (schema.custom containing an epic-link type) to
@@ -65,14 +67,14 @@ Call `getJiraIssueTypeMetaWithFields(projectKey, issueTypeId)`. Walk the `fields
   separate from the `parent` field, which is for sub-tasks.
   - Note: on team-managed/next-gen-style projects, the Epic Link field may also populate
     the issue's `parent` relationship — that's expected, not a bug.
-- If `config.md` marks a due date as an org convention, the field is the system field
+- If `TRACKER.md` marks a due date as an org convention, the field is the system field
   `duedate` (type `date`, format `YYYY-MM-DD`) — include it in `additional_fields` even if
   Jira itself marks it optional.
 
 ## 5. Write the description
 
 Use `contentFormat: "markdown"`. Structure and language come from
-`agent-data/tracker/config.md`'s description template section — read it before writing;
+`<client_root>/TRACKER.md`'s description template section — read it before writing;
 don't assume a fixed structure or language here, since that's an org preference, not a
 Jira requirement.
 
@@ -96,7 +98,7 @@ Report back: issue key, web URL, and a short list of what got set.
 
 Set the child's Epic Link field (or equivalent, per step 4) to the parent's key, or use
 `createIssueLink` with the org's configured "epic/initiative" link-type id from
-`agent-data/tracker/config.md` if the org uses issue links rather than Epic Link for this.
+`<client_root>/TRACKER.md` if the org uses issue links rather than Epic Link for this.
 
 ## 8. Known limitation — Sprints
 
@@ -112,23 +114,24 @@ Don't silently skip sprint assignment — flag it explicitly if it was requested
 
 ## Example
 
-Real MCP call sequence for "create an epic with one linked task under project PROP"
-(values illustrative — actual field IDs come from `config.md`):
+Real MCP call sequence for "create an epic with one linked task under project TEAM"
+(values illustrative — actual field IDs come from `<client_root>/TRACKER.md`):
 
 ```
-getVisibleJiraProjects()                                   -> confirms "PROP" exists
-getJiraProjectIssueTypesMetadata("PROP")                    -> Epic untranslatedName "Epic"
-getJiraIssueTypeMetaWithFields("PROP", "<epic-type-id>")    -> required: customfield_XXXXX (Category)
+resolve_client_root()                                       -> ~/workspace/trillia
+getVisibleJiraProjects()                                   -> confirms "TEAM" exists
+getJiraProjectIssueTypesMetadata("TEAM")                    -> Epic untranslatedName "Epic"
+getJiraIssueTypeMetaWithFields("TEAM", "<epic-type-id>")    -> required: customfield_XXXXX (Category)
 createJiraIssue({
-  projectKey: "PROP", issueTypeName: "Epic", summary: "...",
-  description: "<markdown per config.md template>",
+  projectKey: "TEAM", issueTypeName: "Epic", summary: "...",
+  description: "<markdown per TRACKER.md template>",
   additional_fields: { customfield_XXXXX: {"id": "<matched allowedValue id>"} }
-})                                                            -> "PROP-456"
-getJiraIssue("PROP-456", fields: ["customfield_XXXXX"])       -> confirms field landed
+})                                                            -> "TEAM-456"
+getJiraIssue("TEAM-456", fields: ["customfield_XXXXX"])       -> confirms field landed
 
 createJiraIssue({
-  projectKey: "PROP", issueTypeName: "Task", summary: "...",
+  projectKey: "TEAM", issueTypeName: "Task", summary: "...",
   description: "...",
-  additional_fields: { customfield_YYYYY: "PROP-456" }        // Epic Link field
-})                                                            -> "PROP-457"
+  additional_fields: { customfield_YYYYY: "TEAM-456" }        // Epic Link field
+})                                                            -> "TEAM-457"
 ```

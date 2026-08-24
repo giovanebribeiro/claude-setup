@@ -24,16 +24,16 @@ user explicitly wants a piece of approved work tracked before/while work starts.
 Right after a plan for "add retry logic to card-sync worker" is approved:
 
 ```
-/track-work PROP
+/track-work TEAM
 ```
 
 Output relayed to the user:
 
 ```
-Created PROP-456 (epic: "Add retry logic to card-sync worker") and three linked tasks:
-PROP-457, PROP-458, PROP-459.
+Created TEAM-456 (epic: "Add retry logic to card-sync worker") and three linked tasks:
+TEAM-457, TEAM-458, TEAM-459.
 
-https://<site>.atlassian.net/browse/PROP-456
+https://<site>.atlassian.net/browse/TEAM-456
 ...
 
 Implementation will not start until you confirm — reply to proceed.
