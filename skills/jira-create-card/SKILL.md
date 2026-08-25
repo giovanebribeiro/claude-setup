@@ -2,7 +2,7 @@
 name: jira-create-card
 description: >
   Create a well-formed Jira Epic or card (issue) on a client's Atlassian account using the
-  atlassian MCP tools. Encodes client-specific field quirks (e.g. Trillia's Classe custom
+  atlassian MCP tools. Encodes client-specific field quirks (e.g. ACME's Classe custom
   field, Epic Link field, issue-type name mismatch) and enforces best practices from
   EPIC-STANDARDS.md: always set a due date, structure Epics as a full project charter and
   cards per the client's card template (see TRACKER.md), and ask the user to clarify
@@ -28,7 +28,7 @@ belongs in `TRACKER.md`.
 
 Before creating anything, make sure you have:
 
-- **Project key** (e.g. `PROP`). Ask if not stated or ambiguous.
+- **Project key** (e.g. `TEAM`). Ask if not stated or ambiguous.
 - **Summary** — short, action-oriented title.
 - **Issue type** (Tarefa/Task, História/Story, Bug, Épico...). Default to Task-equivalent if
   the user just says "card" without specifying.
@@ -65,16 +65,16 @@ Walk the `fields` array:
 - Any field with `"required": true` that isn't summary/project/issuetype/reporter MUST be set
   before creating, or the call will fail. Check `<client_root>/TRACKER.md`'s custom-field
   table for known field IDs/names for this project first. Example from one observed
-  client (Trillia, project PROP): **Classe** (`customfield_19851`, type `option`) — match
+  client (ACME, project TEAM): **Classe** (`customfield_19851`, type `option`) — match
   the user's intent against `allowedValues` by `value` (e.g. "Operacional",
   "Desenvolvimento", "Pesquisa"...) and submit `{"id": "<matched id>"}`. If a required
   field isn't in `TRACKER.md`'s table yet, resolve it here and consider asking the user
   whether to record it there for next time. If the user's stated category doesn't clearly
   match one of the `allowedValues`, list the options and ask.
 - Look for an **Epic Link** field (schema.custom containing `gh-epic-link`; one observed
-  client uses `customfield_10014` on its PROP project, but this id is not universal — find
+  client uses `customfield_10014` on its TEAM project, but this id is not universal — find
   it live per project). Set it to the parent epic's key as a plain string, e.g.
-  `"PROP-436"`. This is the correct way to attach a card to an epic — separate
+  `"TEAM-436"`. This is the correct way to attach a card to an epic — separate
   from the `parent` field (which is for sub-tasks).
   - Note: on team-managed/next-gen-style setups the Epic Link field populates the issue's
     `parent` relationship too — that's expected, not a bug.
@@ -87,7 +87,7 @@ Walk the `fields` array:
 
 Use `contentFormat: "markdown"`. Structure depends on issue type — full structures and the
 "don't leave empty" rules are in the client's `EPIC-STANDARDS.md` (resolved via the
-`client-context` skill), read it before writing. One observed client (Trillia) uses:
+`client-context` skill), read it before writing. One observed client (ACME) uses:
 
 - **Epic**: project charter — Goal, Stakeholders, Communication mode, Rough roadmap,
   Deliverables, Scope (in/out), Known risks.

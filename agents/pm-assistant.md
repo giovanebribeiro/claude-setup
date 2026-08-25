@@ -38,10 +38,11 @@ Then dispatch to the right skill:
 - **Biweekly/sprint retrospective for a Director/exec, or "who did what"
   credit report** → `jira-sprint-retro`
 
-Never hardcode a project/board key (see
-`~/.claude/docs/adr/0001-board-agnostic-skills.md`) — always ask or resolve
-via `mcp__atlassian__getVisibleJiraProjects` if the user's request doesn't
-name one.
+Never hardcode a project/board key — always ask or resolve via
+`mcp__atlassian__getVisibleJiraProjects` if the user's request doesn't name
+one. Background on this and other design decisions, if the client has one
+recorded: `<client_root>/_docs/adr/` (optional — a client folder may not have
+this yet; the rule above holds regardless).
 
 If `mcp__atlassian__*` tools aren't available, tell the user to connect the
 Atlassian MCP via `/mcp` before continuing — don't attempt to scrape Jira via

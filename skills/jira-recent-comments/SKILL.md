@@ -31,7 +31,7 @@ available.
 
 ## Quick start
 
-Given a project key (e.g. `PROP`) and a window in days (default 4), find every
+Given a project key (e.g. `TEAM`) and a window in days (default 4), find every
 issue with at least one comment created inside that window and print, per
 issue: key, title, epic, browse link, and each in-window comment (author,
 timestamp, full body).
@@ -100,7 +100,7 @@ timestamp, full body).
 
 6. **Build the browse link** for each issue: `https://<site>/browse/<KEY>`
    (site hostname from the cloud resource's `url` field, e.g.
-   `trilliab3.atlassian.net`).
+   `acme.atlassian.net`).
 
 7. **Print grouped by epic, epic code on its own line above the cards**.
    Walk `/tmp/jira_window_filtered.json` in order (already sorted by

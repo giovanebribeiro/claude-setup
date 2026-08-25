@@ -11,7 +11,7 @@ document for someone who does not need per-card detail — only what's working,
 what's at risk, and what decision they might need to make.
 
 **Does not call Jira directly.** It reads `jira-project-health` report
-files (`<client_root>/_reports/relatorio-epicos-<KEY>-<YYYY-MM-DD>.md`). If the needed
+files (`<client_root>/_reports/epic-health-<KEY>-<YYYY-MM-DD>.md`). If the needed
 report(s) don't exist yet or are stale (older than the user's window), run
 `jira-project-health` first for each project key in scope, then come back to
 this skill.
@@ -25,21 +25,22 @@ from and written to `<client_root>/_reports/`.
 
 ## Inputs
 
-- **Project keys** (required, one or more): e.g. `PROP`, `EP`. Ask if not
+- **Project keys** (required, one or more): e.g. `TEAM`, `ACME`. Ask if not
   stated — never assume "all boards."
 - **Audience framing** (optional): default is a generic Director; the user
   may ask for a different framing (e.g. "for the CTO").
 
 ### 1. Gather source reports
 For each project key, find the most recent
-`<client_root>/_reports/relatorio-epicos-<KEY>-*.md`.
+`<client_root>/_reports/epic-health-<KEY>-*.md`.
 If missing or the user says it's stale, tell them which project needs a fresh
 `jira-project-health` run before you can continue — don't fabricate findings
 from memory.
 
 ### 2. Extract signal, drop noise
-From each report's macro view and "Alertas e lacunas" section, pull out only
-what matters at Director altitude:
+From each report's macro view and its alerts/gaps footer section (rendered
+per this client's skeleton, e.g. "Alertas e lacunas" for one observed
+client), pull out only what matters at Director altitude:
 - **Opportunities** — Epics ahead of schedule, well-scoped wins worth
   highlighting or doubling down on.
 - **Emerging failure points** — overdue Epics, strategy drift, undocumented
@@ -55,20 +56,25 @@ Do not just summarize the health report shorter — translate from
 
 ### 3. Output
 Write a markdown file under `<client_root>/_reports/`:
-`<client_root>/_reports/resumo-executivo-<YYYY-MM-DD>.md`, structured:
+`<client_root>/_reports/exec-summary-<YYYY-MM-DD>.md`. The filename pattern is
+fixed/language-neutral regardless of the report's own language (below).
+
+**Render using `<client_root>/TRACKER.md`'s "Executive summary skeleton"**
+(under "Report skeletons"), if that client has filled one in. If not, use
+this generic default:
 
 ```
-# Resumo executivo — <data>
-Projetos cobertos: <KEY1>, <KEY2>...
+# Executive Summary — <date>
+Projects covered: <KEY1>, <KEY2>...
 
-## Oportunidades
+## Opportunities
 - <Epic/board> — <why it's an opportunity, 1-2 sentences>
 
-## Pontos de atenção (riscos emergentes)
-- <Epic/board> — <what's wrong> — **Ação recomendada:** <concrete action>
+## Points of concern (emerging risks)
+- <Epic/board> — <what's wrong> — **Recommended action:** <concrete action>
 
-## Sem ação necessária
-- <Epic/board> — sob monitoramento, sem sinal de risco
+## No action needed
+- <Epic/board> — monitored, no risk signal
 ```
 
 Hyperlink Epic/card keys the same way the source health report does. Then

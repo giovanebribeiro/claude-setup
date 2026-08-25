@@ -1,7 +1,7 @@
 # Jira Adapter
 
 Concrete implementation of the `tracker-adapter` operation contract for Jira, via the
-Atlassian MCP (`mcp__atlassian__*`). Ported from a working Trillia-specific version — the
+Atlassian MCP (`mcp__atlassian__*`). Ported from a working client-specific version — the
 *shape* of every step below is proven; the *values* (cloudId, custom field IDs, project
 keys, description template) are per-client and must come from `<client_root>/TRACKER.md`
 (resolved per step 0 below), never hardcoded here.
@@ -118,7 +118,7 @@ Real MCP call sequence for "create an epic with one linked task under project TE
 (values illustrative — actual field IDs come from `<client_root>/TRACKER.md`):
 
 ```
-resolve_client_root()                                       -> ~/workspace/trillia
+resolve_client_root()                                       -> ~/workspace/acme
 getVisibleJiraProjects()                                   -> confirms "TEAM" exists
 getJiraProjectIssueTypesMetadata("TEAM")                    -> Epic untranslatedName "Epic"
 getJiraIssueTypeMetaWithFields("TEAM", "<epic-type-id>")    -> required: customfield_XXXXX (Category)

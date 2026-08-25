@@ -1,6 +1,6 @@
 ---
 name: jira-project-health
-description: Project-planning & execution health report for a Jira project's In-Progress Epics — a macro view (each Epic's objective↔cards coverage, progress tally, schedule health, characteristics sanity, and strategy drift) plus a micro view (recent comments on the cards within those Epics, verbatim). Use when the user wants feedback on how well projects are being planned and executed, an Epic-level status/health report, or to monitor a board like PROP or EP.
+description: Project-planning & execution health report for a Jira project's In-Progress Epics — a macro view (each Epic's objective↔cards coverage, progress tally, schedule health, characteristics sanity, and strategy drift) plus a micro view (recent comments on the cards within those Epics, verbatim). Use when the user wants feedback on how well projects are being planned and executed, an Epic-level status/health report, or to monitor a board like TEAM or ACME.
 agents: ["pm-assistant"]
 ---
 
@@ -29,7 +29,7 @@ without any other change.
 
 ## Inputs
 
-- **Project key** (required): e.g. `PROP`, `EP`. This is the JQL
+- **Project key** (required): e.g. `TEAM`, `ACME`. This is the JQL
   project key, *not* a board ID. If unknown/ambiguous, list with
   `mcp__atlassian__getVisibleJiraProjects` and confirm.
 - **Window days** (optional, default **7**): look-back for "recent" comments in
@@ -65,7 +65,7 @@ below and for judging what "well-defined" means at the end.
 Try `cloud_id` from `<client_root>/TRACKER.md` first. If absent, or the call
 fails with an auth/resource error, call
 `mcp__atlassian__getAccessibleAtlassianResources`; take the `id` (UUID)
-and `url` (hostname for browse links, e.g. `trilliab3.atlassian.net`) of the
+and `url` (hostname for browse links, e.g. `acme.atlassian.net`) of the
 Jira-scoped resource, and update `TRACKER.md` with the corrected value.
 
 ### 2. Find In-Progress Epics
@@ -157,15 +157,18 @@ re-render). Group by Epic, then by card.
 
 ### 6. Analyse — the five macro dimensions, per Epic
 1. **Objective ↔ cards coverage** — does the executed/planned card set cover
-   the stated objective (native description + Breve descrição)? Flag parts of
-   the objective with no dedicated card (a *gap*).
+   the stated objective (native description, plus any client-specific
+   objective-text field — check `VOCABULARY.md`; one observed client calls
+   theirs "Breve descrição")? Flag parts of the objective with no dedicated
+   card (a *gap*).
 2. **Progress tally** — counts of cards done / in-progress / pending/to-do.
 3. **Schedule health** — Epic `duedate` present? overdue vs today? cards
    with/without due dates? **stagnation** (no card or comment activity in the
    window)?
 4. **Characteristics sanity** — the discovered custom fields, with
-   contradictions flagged (e.g. stale "Epic Status", SecOps "Em Análise"
-   blocking, missing native description).
+   contradictions flagged (e.g. stale "Epic Status", a review/approval field
+   stuck in a blocking state, missing native description — one observed
+   client's example: SecOps field stuck on "Em Análise").
 5. **Strategy drift** — cards whose subject matter diverges from the Epic
    objective. Drift = *extra* off-objective cards being absorbed (sign of
    stakeholder requests landing mid-sprint without strategic connection), as
@@ -178,38 +181,46 @@ are reproduced verbatim in the micro section.
 
 ### 7. Output
 Write a markdown file under **`<client_root>/_reports/`** (create the dir if
-missing): `<client_root>/_reports/relatorio-epicos-<KEY>-<YYYY-MM-DD>.md`.
+missing): `<client_root>/_reports/epic-health-<KEY>-<YYYY-MM-DD>.md`. The filename
+pattern is fixed/language-neutral regardless of the report's own language (below).
 
 **Hyperlink every Epic and card key.** Build browse links from the `url`
 hostname captured in step 1: `https://<host>/browse/<KEY>` (e.g.
-`https://trilliab3.atlassian.net/browse/POINT-123`). Render each key as a
+`https://acme.atlassian.net/browse/POINT-123`). Render each key as a
 markdown link `[<KEY>](https://<host>/browse/<KEY>)` everywhere a key appears —
 Epic headings, the Cards table, comment lines, and any key cited in the
-analysis/Alertas. Never print a bare key.
+analysis/alerts section. Never print a bare key.
+
+**Render using `<client_root>/TRACKER.md`'s "Epic health report skeleton"** (under
+"Report skeletons"), if that client has filled one in — language, section names, and
+field labels are their convention, not a Jira requirement. Map this skill's internal
+neutral categories (see step 6) to their status label mapping table at render time.
+If the client hasn't defined a skeleton, use this generic default:
 
 ```
-# Relatório — Épicos <KEY> em andamento
-Projeto: <KEY> — <project name>
-Data do relatório: <YYYY-MM-DD> · Janela de comentários: últimos <N> dias
+# Epic Health Report — <KEY>
+Project: <KEY> — <project name>
+Report date: <YYYY-MM-DD> · Comment window: last <N> days
 
 ## [<EPIC-KEY>](https://<host>/browse/<EPIC-KEY>) — "<summary>"
-**Objetivo:** <description / Breve descrição>
+**Objective:** <description — check VOCABULARY.md for this client's objective-text
+field if it's not the native description>
 
-| Campo | Valor |   ← discovered characteristics (filtered)
+| Field | Value |   ← discovered characteristics (filtered)
 ...
 
-### Cards vinculados
-| Card | Resumo | Status | Due date | Responsável |  ← note linkage type if useful
+### Linked cards
+| Card | Summary | Status | Due date | Assignee |  ← note linkage type if useful
 | [<CARD-KEY>](https://<host>/browse/<CARD-KEY>) | ... |
 
-### Progresso x objetivo
+### Progress vs. objective
 <narrative covering coverage, tally, schedule, characteristics, drift —
 cite card keys as links too>
 
-### Comentários recentes (micro)
+### Recent comments
 - [<card>](https://<host>/browse/<card>) · <author> | <timestamp> — <body>
 
-## Alertas e lacunas   ← consolidated across all Epics
+## Alerts & gaps   ← consolidated across all Epics
 1. ...
 ```
 Then echo a short summary in chat (Epic count, headline alerts).
@@ -225,7 +236,7 @@ company-specific conventions a "well-defined" Epic/card is judged against.
 
 ## Notes
 - Default comment window is 7 days; user-overridable.
-- Run once per project (separate report files for each project key, e.g. PROP, EP).
+- Run once per project (separate report files for each project key, e.g. TEAM, ACME).
 - Localized statuses: filter via the English JQL key, read display names as-is.
 - If a `searchJiraIssuesUsingJql`/`getJiraIssue` result is saved to a file,
   probe with `jq 'keys'` / `.issues.nodes[0]|keys` before extracting — the

@@ -38,7 +38,7 @@ never walk above it). If a match is found, that's the client root — use it dir
 need to ask.
 
 This covers the common case: the tool was invoked while working inside a client's
-project folder (e.g. `~/workspace/trillia/trillia-loom/`), which is nested under that
+project folder (e.g. `~/workspace/acme/acme-webapp/`), which is nested under that
 client's root.
 
 ### 2. Ask, don't guess
@@ -66,14 +66,14 @@ Once `<client_root>` is known:
 
 ## Example
 
-`tracker-integrator` invoked while cwd is `~/workspace/trillia/trillia-loom/apps/web`:
+`tracker-integrator` invoked while cwd is `~/workspace/acme/acme-webapp/apps/web`:
 
 ```
 resolve_client_root()
-  check ~/workspace/trillia/trillia-loom/apps/web  -> no marker files
-  check ~/workspace/trillia/trillia-loom            -> no marker files
-  check ~/workspace/trillia                         -> all four present -> MATCH
--> ~/workspace/trillia
+  check ~/workspace/acme/acme-webapp/apps/web  -> no marker files
+  check ~/workspace/acme/acme-webapp            -> no marker files
+  check ~/workspace/acme                         -> all four present -> MATCH
+-> ~/workspace/acme
 ```
 
 `pm-assistant` invoked while cwd is `~/workspace/pmo`:
@@ -83,6 +83,6 @@ resolve_client_root()
   check ~/workspace/pmo       -> no marker files
   check ~/workspace           -> no marker files (this is the stopping point)
   no match -> list subdirectories of ~/workspace/ with all four marker files
-           -> found: trillia
-  ask user: "This looks like it's for a specific client's Jira — which one? (trillia)"
+           -> found: acme
+  ask user: "This looks like it's for a specific client's Jira — which one? (acme)"
 ```
