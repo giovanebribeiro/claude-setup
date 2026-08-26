@@ -29,6 +29,7 @@ Located in `~/.claude/commands`
 | session-time | Calculates the user time in actual chat with Claude |
 | skill-health | Show skill portfolio health dashboard with charts and analytics |
 | tdd | This command invokes the **tdd-guide** agent to enforce test-driven development methodology |
+| track-work | Create tracker (Jira) epics/tasks for an approved plan, then stop for confirmation before implementation. Opt-in. |
 | update-codemaps | Analyze the codebase structure and generate token-lean architecture documentation |
 | update-docs | Sync documentation with the codebase, generating from source-of-truth files |
 | verify | Run comprehensive verification on current codebase state |
@@ -42,7 +43,7 @@ Detailed guidelines are in `~/.claude/rules/`:
 | security.md | ToDo | Security checks, secret management |
 | coding-style.md | Done | Immutability, file organization, error handling |
 | testing.md | ToDo | TDD workflow, 80% coverage requirement |
-| git-workflow.md | ToDo | Commit format, PR workflow |
+| git-workflow.md | Done | Commit format, PR workflow, tracker-issue-key-in-subject convention |
 | agents.md | Done | Agent orchestration, when to use which agent |
 | patterns.md | ToDo | API response, repository patterns |
 | performance.md | ToDo | Model selection, context management |
@@ -64,6 +65,7 @@ Located in `~/.claude/agents/`
 | java-build-resolver | Done | Java/Maven/Gradle build, compilation, and dependency error resolution specialist |
 | python-resolver | Done | Expert Python code reviewer |
 | rust-reviewer | Done | Expert Rust code reviewer |
+| tracker-integrator | Done | Creates tracker (Jira) epics/tasks from an approved plan, opt-in |
 | rust-build-resolver | Done | Rust build, borrow-checker, and clippy error resolution specialist |
 | planner | Done | Feature implementation planning |
 | tdd-guide | Done | Test-driven development |
@@ -85,10 +87,7 @@ Located in `~/.claude/agents/`
 - Prefer self-documenting code over comments
 
 ### git
-- Use conventional format: <type>(<scope>): <subject> where type = feat|fix|docs|style|refactor|test|chore|perf. Subject: 70 chars max, imperative mood ("add" not "added"), no period.
-- For small changes: one-line commit only. For complex changes: add body explaining what/why (72-char lines) and reference issues. 
-- Keep commits atomic (one logical change) and self-explanatory.
-- Split into multiple commits if addressing different concerns.
+See `rules/common/git-workflow.md` for commit format and the tracker-issue-key convention.
 
 ### testing
 - TDD approach: write tests first

@@ -10,12 +10,11 @@ projects/
 .last-update-result.json
 .serena/
 RTK.md
-agent-data/
 daemon/
 debug/
 file-history/
 homunculus/
-hooks/
+/hooks/
 jobs/
 paste-cache/
 plans/
@@ -23,6 +22,14 @@ sessions/
 settings.local.json
 settings.json.bak
 shell-snapshots/
-skills/
 stats-cache.json
 tasks/
+
+# company-specific skill content (learned from a specific employer's Jira instance)
+skills/learned/jira-epic-arc-pattern.md
+skills/github-actions-to-gitlab-ci/
+
+# contains a real name + real corporate email (authorship credit), not client
+# operational data — untracked via `git rm --cached`, kept on disk
+commands/session-time.md
+daemon.log

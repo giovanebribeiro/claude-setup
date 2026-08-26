@@ -29,6 +29,10 @@
           {
             "type": "command",
             "command": "atuin hook claude-code"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/skills/tracker-adapter/hooks/commit-key-reminder.sh"
           }
         ]
       }
@@ -74,5 +78,9 @@
       }
     ]
   },
-  "theme": "dark"
+  "tui": "fullscreen",
+  "theme": "dark",
+  "enabledPlugins": {
+    "rust-analyzer-lsp@claude-plugins-official": true
+  }
 }
