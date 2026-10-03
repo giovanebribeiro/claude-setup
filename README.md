@@ -61,7 +61,7 @@ npx skills add giovanebribeiro/claude-setup -a claude-code -g -y
 
 | Skill | Role |
 |---|---|
-| `/grill-me` | Interactive design drilling (replaces `planner` agent) |
+| `/grill-me` | Interactive design drilling; used inside Wayfinder grilling tickets |
 | `/wayfinder` | Large-feature planning via decision tickets |
 | `/to-spec` + `/to-tickets` | Spec-to-Jira flow (replaces `tracker-integrator` agent) |
 | `tdd` (model-invoked) | Red-green-refactor loops (replaces `tdd-guide` agent) |
@@ -91,11 +91,19 @@ part of `~/.claude`, so there is nothing to gitignore.
 The diagram below shows a full request through the agent orchestration. Rule numbers
 refer to `rules/common/agents.md`.
 
+Large or foggy features start with Wayfinder (Phase 0) before entering the execution
+path. Clear, scoped requests skip directly to `architect`.
+
 ```mermaid
 flowchart TD
-    U["User: Add a JWT-protected POST /api/refresh-token\nendpoint, TDD, track it in Jira"] --> ARCH
+    U["User request"] --> FORK{{"Large / foggy\nfeature?"}}
 
-    ARCH["architect\nvalidates approach, designs the endpoint\n(mandatory first step — rule 1)"] --> MGR
+    FORK -->|yes| WAY["/wayfinder\nmaps decisions, resolves tickets\nPhase 0 — multiple sessions"]
+    FORK -->|no| ARCH
+
+    WAY -->|"resolved map\npassed as context"| ARCH
+
+    ARCH["architect\ndesigns the system\n(mandatory — rule 1)"] --> MGR
 
     MGR["manager\ndecomposes into a dispatch table\n(architect's design passed in)"] --> TRACK
 
@@ -125,12 +133,34 @@ in a **single message** so they run concurrently.
 
 ---
 
+**Step 0 — Wayfinder (large / foggy features only)**
+
+When the feature is too big or too unclear for a single session, chart a decision map
+first:
+
+```
+/wayfinder
+```
+
+Work through the decision tickets over multiple sessions. When the map has no open
+unblocked tickets and the destination is clear, copy the resolved map (Destination +
+Decisions-so-far sections) — you will pass it to architect in Step 1.
+
+Skip this step for scoped, well-defined requests.
+
+---
+
 **Step 1 — Architect (mandatory first)**
 
 ```
 @architect Add a JWT-protected POST /api/refresh-token endpoint to the auth service.
 Design the token-refresh contract, where it slots into the existing auth module,
 error-handling shape, and any storage/schema implications.
+
+# If preceded by Wayfinder, append:
+Context from Wayfinder map:
+- Destination: <paste>
+- Decisions resolved: <paste Decisions-so-far>
 ```
 
 Wait for the design. Copy the full output — you will pass it to manager.
